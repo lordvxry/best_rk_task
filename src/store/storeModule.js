@@ -3,6 +3,7 @@ import axios from "axios"
 export const storeModule = {
     state: () => ({
         products: [],
+        isFetching: false,
         selectedSort: "",
         searchQuery: "",
         limit: 20,
@@ -26,6 +27,9 @@ export const storeModule = {
         setProducts(state, products) {
             state.products = products
         },
+        setFetching(state, bool) {
+            state.isFetching = bool
+        },
         setSearchQuery(state, searchQuery) {
             state.searchQuery = searchQuery
         },
@@ -35,6 +39,7 @@ export const storeModule = {
     },
     actions: {
         async fetchProducts({state, commit}) {
+            commit("setFetching", true)
             try {
                 const response = await axios.get("https://fakestoreapi.com/products", {
                     params: {
@@ -46,6 +51,8 @@ export const storeModule = {
                 }))
             } catch (error) {
                 console.log(error)
+            } finally {
+                commit("setFetching", false)
             }
         },
     },
